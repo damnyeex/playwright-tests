@@ -1,277 +1,332 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page, type Locator } from "@playwright/test";
 
-test("Проверка отображения элементов хедера и баннера на странице", async ({
-    page,
-}) => {
-    await page.goto("https://playwright.dev/");
+type ElementCheck = {
+    name: string;
+    locator: (page: Page) => Locator;
+    attribute?: { name: string; value: string };
+    text?: string;
+    group?: string;
+};
 
-    await expect
-        .soft(page.getByRole("link", { name: "Playwright logo Playwright" }))
-        .toBeVisible();
-    await expect.soft(page.getByRole("link", { name: "Docs" })).toBeVisible();
-    await expect
-        .soft(page.getByRole("link", { name: "MCP", exact: true }))
-        .toBeVisible();
-    await expect
-        .soft(page.getByRole("link", { name: "CLI", exact: true }))
-        .toBeVisible();
-    await expect.soft(page.getByRole("link", { name: "API" })).toBeVisible();
-    await expect
-        .soft(page.getByRole("button", { name: "Node.js" }))
-        .toBeVisible();
-    await expect
-        .soft(page.getByRole("link", { name: "GitHub repository" }))
-        .toBeVisible();
-    await expect
-        .soft(page.getByRole("link", { name: "Discord server" }))
-        .toBeVisible();
-    await expect
-        .soft(
-            page.getByRole("button", { name: "Switch between dark and light" }),
-        )
-        .toBeVisible();
-    await expect
-        .soft(page.getByRole("button", { name: "Search (Control+k)" }))
-        .toBeVisible();
-    await page
-        .getByRole("heading", { name: "Playwright enables reliable" })
-        .click();
-    await expect
-        .soft(page.getByText("One API to drive Chromium,"))
-        .toBeVisible();
-    await expect
-        .soft(page.getByRole("link", { name: "Get started" }))
-        .toBeVisible();
-    await expect
-        .soft(page.getByRole("link", { name: "Star microsoft/playwright on" }))
-        .toBeVisible();
-    await expect
-        .soft(page.getByRole("link", { name: "97k+ stargazers on GitHub" }))
-        .toBeVisible();
-});
+const elements: ElementCheck[] = [
+    {
+        locator: (page) =>
+            page.getByRole("link", { name: "Playwright logo Playwright" }),
+        name: "Playwright logo Playwright",
+        attribute: {
+            name: "href",
+            value: "/",
+        },
+        text: "Playwright",
+        group: "banner-header",
+    },
+    {
+        locator: (page) => page.getByRole("link", { name: "Docs" }),
+        name: "Docs",
+        attribute: {
+            name: "href",
+            value: "/docs/intro",
+        },
+        text: "Docs",
+        group: "banner-header",
+    },
+    {
+        locator: (page) => page.getByRole("link", { name: "MCP", exact: true }),
+        name: "MCP",
+        attribute: {
+            name: "href",
+            value: "/mcp/introduction",
+        },
+        text: "MCP",
+        group: "banner-header",
+    },
+    {
+        locator: (page) => page.getByRole("link", { name: "CLI", exact: true }),
+        name: "CLI",
+        attribute: {
+            name: "href",
+            value: "/agent-cli/introduction",
+        },
+        text: "CLI",
+        group: "banner-header",
+    },
+    {
+        locator: (page) => page.getByRole("link", { name: "API" }),
+        name: "API",
+        attribute: {
+            name: "href",
+            value: "/docs/api/class-playwright",
+        },
+        text: "API",
+        group: "banner-header",
+    },
+    {
+        locator: (page) => page.getByRole("button", { name: "Node.js" }),
+        name: "Node.js",
+        text: "Node.js",
+        group: "banner-header",
+    },
+    {
+        locator: (page) =>
+            page.getByRole("link", { name: "GitHub repository" }),
+        name: "GitHub repository",
+        attribute: {
+            name: "href",
+            value: "https://github.com/microsoft/playwright",
+        },
+        group: "banner-header",
+    },
+    {
+        locator: (page) => page.getByRole("link", { name: "Discord server" }),
+        name: "Discord server",
+        attribute: {
+            name: "href",
+            value: "https://aka.ms/playwright/discord",
+        },
+        group: "banner-header",
+    },
+    {
+        locator: (page) =>
+            page.getByRole("button", {
+                name: "Switch between dark and light",
+            }),
+        name: "кнопки переключения темы",
+        group: "banner-header",
+    },
+    {
+        locator: (page) =>
+            page.getByRole("button", { name: "Search (Control+k)" }),
+        name: "Search (Control+k)",
+        text: "SearchCtrlK",
+        group: "banner-header",
+    },
+    {
+        locator: (page) => page.getByText("One API to drive Chromium"),
+        name: "One API to drive Chromium",
+        text: "One API to drive Chromium, Firefox, and WebKit — in your tests, your scripts, and your agent workflows. Available for TypeScript, Python, .NET, and Java.",
+        group: "banner-header",
+    },
+    {
+        locator: (page) => page.getByRole("link", { name: "Get started" }),
+        name: "Get started",
+        text: "Get started",
+        group: "banner-header",
+    },
+    {
+        locator: (page) =>
+            page.getByRole("link", {
+                name: "Star microsoft/playwright on",
+            }),
+        name: "Star microsoft/playwright on",
+        attribute: {
+            name: "href",
+            value: "https://github.com/microsoft/playwright",
+        },
+        text: "Star",
+        group: "banner-header",
+    },
+    {
+        locator: (page) =>
+            page.getByRole("link", { name: "97k+ stargazers on GitHub" }),
+        name: "97k+ stargazers on GitHub",
+        attribute: {
+            name: "href",
+            value: "https://github.com/microsoft/playwright/stargazers",
+        },
+        text: "97k+",
+        group: "banner-header",
+    },
+    {
+        locator: (page) =>
+            page.getByRole("link", { name: "Testing documentation" }),
+        name: "Testing documentation",
+        attribute: {
+            name: "href",
+            value: "/docs/intro",
+        },
+        group: "banner-header",
+    },
+    {
+        locator: (page) =>
+            page.getByRole("link", { name: "CLI documentation" }),
+        name: "CLI documentation",
+        attribute: {
+            name: "href",
+            value: "/docs/getting-started-cli",
+        },
+        group: "banner-header",
+    },
+    {
+        locator: (page) =>
+            page.getByRole("link", { name: "MCP documentation" }),
+        name: "MCP documentation",
+        attribute: {
+            name: "href",
+            value: "/docs/getting-started-mcp",
+        },
+        group: "banner-header",
+    },
+    {
+        locator: (page) =>
+            page.getByRole("heading", {
+                name: "Playwright enables reliable",
+            }),
+        name: "Playwright enables reliable web automation for testing, scripting, and AI agents.",
+        group: "banner-header",
+    },
+    {
+        locator: (page) => page.getByText("Playwright TestFull-featured"),
+        name: "Playwright TestFull-featured",
+        text: "Playwright TestFull-featured test runner with auto-waiting, assertions, tracing, and parallelism across Chromium, Firefox, and WebKit.npm init playwright@latestTesting documentation",
+        group: "install-cards",
+    },
+    {
+        locator: (page) => page.getByText("Playwright CLIToken-efficient"),
+        name: "Playwright CLIToken-efficient",
+        text: "Playwright CLIToken-efficient browser automation for coding agents like Claude Code and GitHub Copilot. Skill-based workflows without large context overhead.npm i -g @playwright/cli@latestCLI documentation",
+        group: "install-cards",
+    },
+    {
+        locator: (page) => page.getByText("Playwright MCPModel Context"),
+        name: "Playwright MCPModel Context",
+        text: "Playwright MCPModel Context Protocol server that gives AI agents full browser control through structured accessibility snapshots.npx @playwright/mcp@latestMCP documentation",
+        group: "install-cards",
+    },
+    {
+        locator: (page) => page.getByRole("link", { name: "Test generator" }),
+        name: "Test generator",
+        text: "Test generator",
+        attribute: {
+            name: "href",
+            value: "docs/codegen",
+        },
+        group: "features-section",
+    },
+    {
+        locator: (page) => page.getByRole("link", { name: "Trace Viewer" }),
+        name: "Trace Viewer",
+        text: "Trace Viewer",
+        attribute: {
+            name: "href",
+            value: "docs/trace-viewer-intro",
+        },
+        group: "features-section",
+    },
+    {
+        locator: (page) =>
+            page.getByRole("link", { name: "VS Code extension" }),
+        name: "VS Code extension",
+        text: "VS Code extension",
+        attribute: {
+            name: "href",
+            value: "docs/getting-started-vscode",
+        },
+        group: "features-section",
+    },
+];
 
-test("Проверка на корректность названий элементов хедера и баннера на странице", async ({
-    page,
-}) => {
-    await page.goto("https://playwright.dev/");
-
-    await expect
-        .soft(page.getByRole("link", { name: "Playwright logo Playwright" }))
-        .toContainText("Playwright");
-    await expect
-        .soft(page.getByRole("link", { name: "Docs" }))
-        .toContainText("Docs");
-    await expect
-        .soft(page.getByRole("link", { name: "MCP", exact: true }))
-        .toContainText("MCP");
-    await expect
-        .soft(page.getByRole("link", { name: "CLI", exact: true }))
-        .toContainText("CLI");
-    await expect
-        .soft(page.getByRole("link", { name: "API" }))
-        .toContainText("API");
-    await expect
-        .soft(page.getByRole("button", { name: "Node.js" }))
-        .toContainText("Node.js");
-    await expect
-        .soft(page.getByRole("button", { name: "Search (Control+k)" }))
-        .toContainText("Search");
-    await expect
-        .soft(page.getByRole("button", { name: "Search (Control+k)" }))
-        .toContainText("Ctrl");
-    await expect
-        .soft(page.getByRole("button", { name: "Search (Control+k)" }))
-        .toContainText("K");
-    await expect
-        .soft(
-            page.getByRole("heading", { name: "Playwright enables reliable" }),
-        )
-        .toContainText(
-            "Playwright enables reliable web automation for testing, scripting, and AI agents.",
-        );
-    await expect
-        .soft(page.getByText("One API to drive Chromium,"))
-        .toContainText(
-            "One API to drive Chromium, Firefox, and WebKit — in your tests, your scripts, and your agent workflows. Available for TypeScript, Python, .NET, and Java.",
-        );
-    await expect
-        .soft(page.getByRole("link", { name: "Get started" }))
-        .toContainText("Get started");
-    await expect
-        .soft(page.getByRole("link", { name: "Star microsoft/playwright on" }))
-        .toContainText("Star");
-    await expect
-        .soft(page.getByRole("link", { name: "97k+ stargazers on GitHub" }))
-        .toContainText("97k+");
-});
-
-test("Проверка атрибутов href элементов хедера и мейна на странице", async ({
-    page,
-}) => {
-    await page.goto("https://playwright.dev/");
-    await expect
-        .soft(page.getByRole("link", { name: "Playwright logo Playwright" }))
-        .toHaveAttribute("href", "/");
-    await expect
-        .soft(page.getByRole("link", { name: "Docs" }))
-        .toHaveAttribute("href", "/docs/intro");
-    await expect
-        .soft(page.getByRole("link", { name: "MCP", exact: true }))
-        .toHaveAttribute("href", "/mcp/introduction");
-    await expect
-        .soft(page.getByRole("link", { name: "CLI", exact: true }))
-        .toHaveAttribute("href", "/agent-cli/introduction");
-    await expect
-        .soft(page.getByRole("link", { name: "API" }))
-        .toHaveAttribute("href", "/docs/api/class-playwright");
-    await expect
-        .soft(page.getByRole("link", { name: "GitHub repository" }))
-        .toHaveAttribute("href", "https://github.com/microsoft/playwright");
-    await expect
-        .soft(page.getByRole("link", { name: "Discord server" }))
-        .toHaveAttribute("href", "https://aka.ms/playwright/discord");
-    await expect
-        .soft(page.getByRole("link", { name: "Star microsoft/playwright on" }))
-        .toHaveAttribute("href", "https://github.com/microsoft/playwright");
-    await expect
-        .soft(page.getByRole("link", { name: "97k+ stargazers on GitHub" }))
-        .toHaveAttribute(
-            "href",
-            "https://github.com/microsoft/playwright/stargazers",
-        );
-    await expect
-        .soft(page.getByRole("link", { name: "Testing documentation" }))
-        .toHaveAttribute("href", "/docs/intro");
-    await expect
-        .soft(page.getByRole("link", { name: "CLI documentation" }))
-        .toHaveAttribute("href", "/docs/getting-started-cli");
-    await expect
-        .soft(page.getByRole("link", { name: "MCP documentation" }))
-        .toHaveAttribute("href", "/docs/getting-started-mcp");
-});
-
-test("Проверка переключения темы на странице (через const)", async ({
-    page,
-}) => {
-    await page.goto("https://playwright.dev/");
-    const html = page.locator("html");
-    const buttonTheme = page.getByRole("button", {
-        name: "Switch between dark and light",
+test.describe("Тесты для главной страницы", () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto("https://playwright.dev/");
     });
 
-    await expect.soft(html).toHaveAttribute("data-theme-choice", "system");
+    test("Проверка отображения элементов хедера и баннера на странице", async ({
+        page,
+    }) => {
+        elements
+            .filter((el) => el.group === "banner-header")
+            .forEach(({ locator, name }) => {
+                test.step(`Проверка отображения элемента ${name}`, async () => {
+                    await expect.soft(locator(page)).toBeVisible();
+                });
+            });
+    });
 
-    await buttonTheme.click();
-    await expect.soft(html).toHaveAttribute("data-theme-choice", "light");
-    await expect.soft(html).toHaveAttribute("data-theme", "light");
+    test("Проверка на корректность названий элементов хедера и баннера на странице", async ({
+        page,
+    }) => {
+        elements
+            .filter((el) => el.group === "banner-header")
+            .forEach(({ locator, name, text }) => {
+                if (text) {
+                    test.step(`Проверка на корректность названия элемента ${name}`, async () => {
+                        await expect(locator(page)).toContainText(text);
+                    });
+                }
+            });
+    });
 
-    await buttonTheme.click();
-    await expect.soft(html).toHaveAttribute("data-theme-choice", "dark");
-    await expect.soft(html).toHaveAttribute("data-theme", "dark");
+    test("Проверка атрибутов href элементов хедера и мейна на странице", async ({
+        page,
+    }) => {
+        elements
+            .filter((el) => el.group === "banner-header")
+            .forEach(({ locator, name, attribute }) => {
+                if (attribute) {
+                    test.step(`Проверка атрибута href элемента ${name}`, async () => {
+                        await expect
+                            .soft(locator(page))
+                            .toHaveAttribute(attribute.name, attribute.value);
+                    });
+                }
+            });
+    });
 
-    await buttonTheme.click();
-    await expect.soft(html).toHaveAttribute("data-theme-choice", "system");
-});
-
-test("Проверка переключения темы на странице №2", async ({ page }) => {
-    await page.goto("https://playwright.dev/");
-
-    await expect
-        .soft(page.locator("html"))
-        .toHaveAttribute("data-theme-choice", "system");
-    await page
-        .getByRole("button", {
+    test("Проверка переключения темы на странице (через const)", async ({
+        page,
+    }) => {
+        const html = page.locator("html");
+        const buttonTheme = page.getByRole("button", {
             name: "Switch between dark and light",
-        })
-        .click();
+        });
 
-    await expect
-        .soft(page.locator("html"))
-        .toHaveAttribute("data-theme-choice", "light");
+        await expect.soft(html).toHaveAttribute("data-theme-choice", "system");
 
-    await expect
-        .soft(page.locator("html"))
-        .toHaveAttribute("data-theme", "light");
+        await buttonTheme.click();
+        await expect.soft(html).toHaveAttribute("data-theme-choice", "light");
+        await expect.soft(html).toHaveAttribute("data-theme", "light");
 
-    await page
-        .getByRole("button", {
-            name: "Switch between dark and light",
-        })
-        .click();
+        await buttonTheme.click();
+        await expect.soft(html).toHaveAttribute("data-theme-choice", "dark");
+        await expect.soft(html).toHaveAttribute("data-theme", "dark");
 
-    await expect
-        .soft(page.locator("html"))
-        .toHaveAttribute("data-theme-choice", "dark");
+        await buttonTheme.click();
+        await expect.soft(html).toHaveAttribute("data-theme-choice", "system");
+    });
 
-    await expect
-        .soft(page.locator("html"))
-        .toHaveAttribute("data-theme", "dark");
-});
+    test("Проверка отображения и корректности названий карточек из секции с установкой", async ({
+        page,
+    }) => {
+        elements
+            .filter((el) => el.group === "install-cards")
+            .forEach(({ locator, text, name }) => {
+                if (text) {
+                    test.step(`Проверка отображения элемента ${name} по содержанию текста ${text}`, async () => {
+                        await expect.soft(locator(page)).toContainText(text);
+                    });
+                }
+            });
+    });
 
-test("Проверка отображения и корректности названий карточек из секции с установкой", async ({
-    page,
-}) => {
-    await page.goto("https://playwright.dev/");
+    test("Проверка отображения, корректности названий ссылок внутри секции с фичами", async ({
+        page,
+    }) => {
+        elements
+            .filter((el) => el.group === "features-section")
+            .forEach(({ locator, name, text, attribute }) => {
+                test.step(`Проверка отображения элемента ${name} по содержанию текста ${text} c атрибутом ${attribute?.value}`, async () => {
+                    await expect.soft(locator(page)).toBeVisible();
 
-    await expect
-        .soft(page.getByText("Playwright TestFull-featured"))
-        .toBeVisible();
-    await expect
-        .soft(page.getByText("Playwright CLIToken-efficient"))
-        .toBeVisible();
-    await expect
-        .soft(page.getByText("Playwright MCPModel Context"))
-        .toBeVisible();
+                    if (text) {
+                        await expect.soft(locator(page)).toContainText(text);
+                    }
 
-    await expect
-        .soft(page.getByText("Playwright TestFull-featured"))
-        .toContainText(
-            "Playwright TestFull-featured test runner with auto-waiting, assertions, tracing, and parallelism across Chromium, Firefox, and WebKit.npm init playwright@latestTesting documentation",
-        );
-
-    await expect
-        .soft(page.getByText("Playwright CLIToken-efficient"))
-        .toContainText(
-            "Playwright CLIToken-efficient browser automation for coding agents like Claude Code and GitHub Copilot. Skill-based workflows without large context overhead.npm i -g @playwright/cli@latestCLI documentation",
-        );
-    await expect
-        .soft(page.getByText("Playwright MCPModel Context"))
-        .toContainText(
-            "Playwright MCPModel Context Protocol server that gives AI agents full browser control through structured accessibility snapshots.npx @playwright/mcp@latestMCP documentation",
-        );
-});
-
-test("Проверка отображения, корректности названий ссылок внутри секции с фичами", async ({
-    page,
-}) => {
-    await page.goto("https://playwright.dev/");
-    await expect
-        .soft(page.getByRole("link", { name: "Test generator" }))
-        .toBeVisible();
-    await expect
-        .soft(page.getByRole("link", { name: "Trace Viewer" }))
-        .toBeVisible();
-    await expect
-        .soft(page.getByRole("link", { name: "VS Code extension" }))
-        .toBeVisible();
-
-    await expect
-        .soft(page.getByRole("link", { name: "Test generator" }))
-        .toContainText("Test generator");
-    await expect
-        .soft(page.getByRole("link", { name: "Trace Viewer" }))
-        .toContainText("Trace Viewer");
-    await expect
-        .soft(page.getByRole("link", { name: "VS Code extension" }))
-        .toContainText("VS Code extension");
-
-    await expect
-        .soft(page.getByRole("link", { name: "Test generator" }))
-        .toHaveAttribute("href", "docs/codegen");
-    await expect
-        .soft(page.getByRole("link", { name: "Trace Viewer" }))
-        .toHaveAttribute("href", "docs/trace-viewer-intro");
-    await expect
-        .soft(page.getByRole("link", { name: "VS Code extension" }))
-        .toHaveAttribute("href", "docs/getting-started-vscode");
+                    if (attribute) {
+                        await expect
+                            .soft(locator(page))
+                            .toHaveAttribute(attribute.name, attribute.value);
+                    }
+                });
+            });
+    });
 });
