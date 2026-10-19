@@ -225,6 +225,8 @@ const elements: ElementCheck[] = [
     },
 ];
 
+const themeMode = ["system", "light", "dark"];
+
 test.describe("Тесты для главной страницы", () => {
     test.beforeEach(async ({ page }) => {
         await page.goto("https://playwright.dev/");
@@ -328,5 +330,23 @@ test.describe("Тесты для главной страницы", () => {
                     }
                 });
             });
+    });
+
+    themeMode.forEach((value) => {
+        test(`Проверка состояния активного мода ${value} переключения темы`, async ({
+            page,
+        }) => {
+            await page.evaluate((value) => {
+                document
+                    .querySelector("html")
+                    ?.setAttribute("data-theme-choice", value);
+                document
+                    .querySelector("html")
+                    ?.setAttribute("data-theme", value);
+            }, value);
+            await expect
+                .soft(page)
+                .toHaveScreenshot(`pageWith ${value} mode.png`);
+        });
     });
 });
