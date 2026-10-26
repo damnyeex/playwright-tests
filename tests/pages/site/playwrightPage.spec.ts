@@ -1,4 +1,4 @@
-import { test } from "../fixtures/PlaywrightPage";
+import { test } from "../../fixtures/PlaywrightPage";
 
 test.describe("Тесты для главной страницы", () => {
     test("Проверка отображения элементов хедера и баннера на странице", async ({

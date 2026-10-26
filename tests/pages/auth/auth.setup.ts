@@ -1,4 +1,4 @@
-import { test } from "../fixtures/AuthLocalhostPage";
+import { test } from "../../fixtures/AuthLocalhostPage";
 
 test("authenticate", async ({ authLocalhostPage, page }) => {
     await authLocalhostPage.ensureAuthFolderExists();

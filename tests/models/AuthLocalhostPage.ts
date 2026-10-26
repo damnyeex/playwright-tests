@@ -1,9 +1,6 @@
 import { Page, Locator, test, expect } from "@playwright/test";
-import path from "path";
 import fs from "fs";
-
-export const authDir = path.join(process.cwd(), "playwright", ".auth");
-export const authFile = path.join(authDir, "user.json");
+import { authDir, authFile } from "../utils/consts/auth-consts";
 
 export class AuthLocalhostPage {
     readonly page: Page;

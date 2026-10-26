@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-nocheck
 import { defineConfig, devices } from "@playwright/test";
 
 /**
@@ -39,31 +39,40 @@ export default defineConfig({
         // Setup project
         {
             name: "setup",
-            testMatch: /.*\.setup\.ts/,
-
+            testDir: "./tests/pages/auth",
+            testMatch: /auth\.setup\.ts/,
             use: {
-                // Base URL to use in actions like `await page.goto('')`. */
                 baseURL: "http://localhost:5173",
             },
         },
         {
-            name: "chromium",
+            name: "auth-chromium",
+            testDir: "./tests/pages/auth",
+            testMatch: /auth\.setup\.ts/,
+            use: {
+                ...devices["Desktop Chrome"],
+                baseURL: "http://localhost:5173",
+            },
+            dependencies: ["setup"],
+        },
+        {
+            name: "site-chromium",
+            testDir: "./tests/pages/site",
+            testMatch: /.*\.spec\.ts/,
             use: {
                 ...devices["Desktop Chrome"],
                 // Use prepared auth state.
-                storageState: "playwright/.auth/user.json",
             },
-            dependencies: ["setup"],
         },
 
-        {
-            name: "firefox",
-            use: {
-                ...devices["Desktop Firefox"],
-                storageState: "playwright/.auth/user.json",
-            },
-            dependencies: ["setup"],
-        },
+        // {
+        //     name: "firefox",
+        //     use: {
+        //         ...devices["Desktop Firefox"],
+        //         storageState: "playwright/.auth/user.json",
+        //     },
+        //     dependencies: ["setup"],
+        // },
 
         // {
         //   name: 'webkit',

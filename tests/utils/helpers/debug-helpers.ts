@@ -1,6 +1,6 @@
 import { test, Page } from "@playwright/test";
 import fs from "fs";
-import { authFile } from "../models/AuthLocalhostPage";
+import { authFile } from "../consts/auth-consts";
 
 export async function debugAuthLogs(page: Page) {
     console.log("URL после логина:", page.url());
